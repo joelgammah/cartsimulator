@@ -56,15 +56,65 @@ def add_to_cart(driver, product, central_config=None):
     try:
         logger.info(f"[GENERIC] Processing product: {name} ({url})")
         driver.get(url)
-        time.sleep(2)  # Allow the page to load
+        time.sleep(3)  # Allow the page to load
         
         # Attempt to dismiss any overlays (cookie consent, modals, etc.)
         dismiss_overlays(driver)
         
-        # Candidate keywords for identifying an add-to-cart button.
+        # If a variant is specified, select it first
+        if variant:
+            # Try different methods to find and select the variant
+            variant_found = False
+            
+            # Method 1: Try to find a radio input with matching value
+            try:
+                radio_input = WebDriverWait(driver, 5).until(
+                    EC.presence_of_element_located((By.CSS_SELECTOR, f'input[type="radio"][value="{variant}"]'))
+                )
+                # Click the associated label
+                label = driver.find_element(By.CSS_SELECTOR, f'label[for="{radio_input.get_attribute("id")}"]')
+                label.click()
+                logger.info(f"[GENERIC] Selected variant '{variant}' using radio input")
+                variant_found = True
+                time.sleep(2)
+            except Exception:
+                logger.info(f"[GENERIC] Could not find radio input for variant '{variant}'")
+            
+            # Method 2: Try to find a button with matching text
+            if not variant_found:
+                try:
+                    variant_xpath = f"//button[contains(translate(text(), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), '{variant.lower()}')]"
+                    variant_element = WebDriverWait(driver, 5).until(
+                        EC.element_to_be_clickable((By.XPATH, variant_xpath))
+                    )
+                    variant_element.click()
+                    logger.info(f"[GENERIC] Selected variant '{variant}' using button text")
+                    variant_found = True
+                    time.sleep(2)
+                except Exception:
+                    logger.info(f"[GENERIC] Could not find button for variant '{variant}'")
+            
+            # Method 3: Try to find a div with matching text
+            if not variant_found:
+                try:
+                    variant_div = WebDriverWait(driver, 5).until(
+                        EC.element_to_be_clickable((By.XPATH, f"//div[contains(text(), '{variant}')]"))
+                    )
+                    variant_div.click()
+                    logger.info(f"[GENERIC] Selected variant '{variant}' using div text")
+                    variant_found = True
+                    time.sleep(2)
+                except Exception:
+                    logger.info(f"[GENERIC] Could not find div for variant '{variant}'")
+            
+            if not variant_found:
+                logger.error(f"[GENERIC] Could not find variant '{variant}' using any method")
+                return False
+        
+        # Wait for and click the "Add to Cart" button
         candidate_keywords = [
             "add to cart", "add to bag", "buy now", "purchase", "shop now", 
-            "add product", "cart", "add item", "order now", "add"
+            "add product", "cart", "add item", "order now", "add", "add to shopping bag"
         ]
         xpath, button, score = find_best_button_xpath(driver, candidate_keywords)
         if xpath:
@@ -77,23 +127,6 @@ def add_to_cart(driver, product, central_config=None):
         else:
             logger.error("[GENERIC] Could not locate a candidate add-to-cart button dynamically.")
             return False
-
-        # Optionally, handle variant selection dynamically:
-        if variant:
-            # Build a candidate XPath for variant selection (this may need adjustments per site)
-            variant_xpath = f"//button[contains(translate(text(), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), '{variant.lower()}')]"
-            logger.info(f"[GENERIC] Searching for variant button using XPath: {variant_xpath}")
-            try:
-                variant_element = WebDriverWait(driver, 10).until(
-                    EC.element_to_be_clickable((By.XPATH, variant_xpath))
-                )
-                variant_element.click()
-                logger.info(f"[GENERIC] Selected variant '{variant}' for {name}")
-            except Exception as ve:
-                logger.error(f"[GENERIC] Variant '{variant}' not found: {ve}")
-                return False
-        else:
-            logger.info("[GENERIC] No variant specified; skipping variant selection.")
 
         # Optional: Add a verification step here (e.g., check cart count or confirmation message)
         time.sleep(2)

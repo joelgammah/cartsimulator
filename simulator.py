@@ -6,7 +6,7 @@ from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 
 from product import PRODUCTS
-from brands import zara_handler, hm_handler, generic_handler  # Import your handlers
+from brands import zara_handler, hm_handler, generic_handler, nike_handler  # Import your handlers
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -33,6 +33,7 @@ def setup_browser():
 BRAND_HANDLERS = {
     "zara": zara_handler.add_to_cart,
     "h&m": hm_handler.add_to_cart,
+    "nike": nike_handler.add_to_cart,
     # For every other brand, default to the generic handler.
     "generic": generic_handler.add_to_cart
 }

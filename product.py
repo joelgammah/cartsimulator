@@ -1,7 +1,7 @@
 # product.py
 
 PRODUCTS = [
-   
+    
     {
         "brand": "prada",
         "name": "Saffiano Leather Clutch",

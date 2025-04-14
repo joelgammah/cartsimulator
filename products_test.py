@@ -1,4 +1,4 @@
-# product.py
+# products_test.py
 
 PRODUCTS = [
     {
@@ -54,6 +54,12 @@ PRODUCTS = [
         "name": "Regular Fit Sweatpants",
         "url": "https://www2.hm.com/en_us/productpage.0970817018.html",
         "variant": "S"
+    },
+    {
+        "brand": "nike",
+        "name": "Nike Air Max 90 Men's Shoes",
+        "url": "https://www.nike.com/t/air-max-90-mens-shoes-NGvmkT/IF0670-600",
+        "variant": 10
     }
 ]
 
