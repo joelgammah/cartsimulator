@@ -1,0 +1,30 @@
+{
+  "default": {
+    "add_to_cart_button_xpath": "//button[contains(translate(text(), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'add to cart')]",
+    "size_option_xpath_template": "//div[contains(@class, 'size') and contains(text(), '{variant}')]",
+    "cart_count_xpath": "//span[@data-qa-id='layout-header-go-to-cart-items-count']",
+    "timeouts": {
+      "default": 10,
+      "variant": 10
+    }
+  },
+  "zara": {
+    "add_to_cart_button_xpath": "//button[@data-qa-action='add-to-cart']",
+    "size_option_xpath_template": "//div[@data-qa-qualifier='size-selector-sizes-size-label' and contains(text(), '{variant}')]",
+    "cart_count_xpath": "//span[@data-qa-id='layout-header-go-to-cart-items-count']",
+    "timeouts": {
+      "default": 10,
+      "variant": 10
+    }
+  },
+  "h&m": {
+    "size_option_xpath_template": "//div[starts-with(@id, 'sizeButton-') and normalize-space(substring-before(@aria-label, ' '))='{variant}']",
+    "add_to_cart_button_xpath": "//button[@data-testid='pdp_add_to_cart_button']",
+    "cart_count_xpath": "//span[contains(@class, 'd86975') and contains(text(), 'Shopping bag')]",
+    "timeouts": {
+        "default": 10,
+        "variant": 10
+    }
+}
+
+}
