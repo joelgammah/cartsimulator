@@ -24,7 +24,7 @@ def get_hm_config():
     """
     return CONFIG.get("h&m", CONFIG["default"])
 
-def add_to_cart(driver, product):
+def add_to_cart(driver, product, central_config=None):
     """
     Adds an H&M product to the shopping bag.
     

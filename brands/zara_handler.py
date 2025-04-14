@@ -20,7 +20,7 @@ def get_zara_config():
     """
     return CENTRAL_CONFIG.get("zara", CENTRAL_CONFIG["default"])
 
-def add_to_cart(driver, product):
+def add_to_cart(driver, product, central_config=None):
     """
     Adds a Zara product to the shopping cart using the centralized configuration.
     
